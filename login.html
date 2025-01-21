@@ -25,7 +25,7 @@
             color: #7E57C2; /* Deep lavender */
             margin-bottom: 20px;
         }
-        input[type="text"], input[type="password"] {
+        input[type="password"] {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -46,27 +46,42 @@
         button:hover {
             background-color: #9C27B0; /* Slightly darker lavender */
         }
-        .link {
-            display: block;
-            margin-top: 15px;
-            color: #7E57C2;
-            text-decoration: none;
+        .error {
+            color: red;
+            margin-top: 10px;
             font-size: 14px;
-        }
-        .link:hover {
-            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
         <h1>Welcome Back!</h1>
-        <form action="/login" method="POST">
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="password" name="password" placeholder="Password" required>
+        <form id="loginForm">
+            <input type="password" id="password" placeholder="Enter Password" required>
             <button type="submit">Login</button>
         </form>
-        <a href="/signup" class="link">Don't have an account? Sign up</a>
+        <p class="error" id="errorMessage" style="display: none;">Invalid password. Please try again.</p>
     </div>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const passwordInput = document.getElementById('password').value;
+            const validPasswords = ['rohan', 'saanvi'];
+
+            if (validPasswords.includes(passwordInput)) {
+                // Generate a token and store it
+                const token = 'secureAccessToken12345'; // You can use a more secure method
+                localStorage.setItem('accessToken', token);
+
+                alert('Login Successful! Redirecting...');
+                // Redirect to your main website
+                window.location.href = 'https://your-main-website-url.com';
+            } else {
+                const errorMessage = document.getElementById('errorMessage');
+                errorMessage.style.display = 'block';
+            }
+        });
+    </script>
 </body>
 </html>
