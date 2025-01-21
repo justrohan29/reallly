@@ -1,0 +1,87 @@
+console.log(
+  "Thanks for visiting. If you're a coder or creative technologist checkout https://experiments.withgoogle.com/ for some of our recent work."
+);
+
+var submitted = false;
+var formbox_base_url = "https://services.google.com/fb/submissions/";
+var formbox_id = "7292d627cf8911ef8f46851b968a0d6d";
+
+var form = document.getElementById("email-form");
+
+var formdone = document.getElementsByClassName("w-form-done")[0];
+var formfail = document.getElementsByClassName("w-form-fail")[0];
+var submitbtn = document.getElementById("submitbtn");
+
+function submitForm(formElement) {
+  submitted = true;
+  submitbtn.disabled = true;
+
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", formbox_base_url + formbox_id + "/", true);
+  xhttp.onload = function () {
+    submitbtn.disabled = false;
+    console.log(xhttp.status);
+    console.log(xhttp.responseText);
+    if (xhttp.status == 200) {
+      var response = this.responseText;
+      form.style.display = "none";
+
+      formfail.style.display = "none";
+      formdone.style.display = "block";
+    } else {
+      formdone.style.display = "none";
+      formfail.style.display = "block";
+    }
+  };
+  var data = new FormData(form);
+  // console.log(data)
+  xhttp.send(data);
+  return false;
+}
+
+var isSupported = (function () {
+  if (/safari/i.test(navigator.userAgent)) {
+    const matches = navigator.userAgent.match(/Version\/([0-9._]+).*Safari/);
+    if (matches && matches.length > 1) {
+      const versionPieces = matches[1].split(/[._]/).slice(0, 3);
+      if (Number(versionPieces[0]) <= 9) {
+        //Flex box isn't supported on ios 9
+        return false;
+      }
+    }
+  }
+  return true;
+})();
+if (!isSupported) {
+  var privacy = document.querySelector(".google-footer-link-container");
+  privacy.style.width = "auto";
+  privacy.style.marginLeft = "-190px";
+}
+
+var resize = function (select) {
+  var hidden_opt = document.getElementById("width_tmp_option");
+  hidden_opt.innerHTML = select.options[select.selectedIndex].textContent;
+  var hidden_sel = document.getElementById("width_tmp_select");
+  hidden_sel.style.display = "initial";
+  select.style.width = hidden_sel.clientWidth + 25 + "px";
+  // hidden_sel.style.display = "none";
+};
+
+var dropDowns = document.querySelectorAll("select");
+dropDowns.forEach(function (select) {
+  select.addEventListener("change", function () {
+    resize(select);
+  });
+});
+
+window.addEventListener("load", function () {
+  dropDowns.forEach(function (select) {
+    resize(select);
+  });
+});
+
+window.addEventListener("resize", function () {
+  dropDowns.forEach(function (select) {
+    resize(select);
+  });
+});
